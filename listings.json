@@ -1,6 +1,8 @@
 [
   {
     "listing": "/blog.html",
-    "items": []
+    "items": [
+      "/blog/posts/2026-02-08-initial-setup.html"
+    ]
   }
 ]
