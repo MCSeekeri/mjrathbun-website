@@ -44,6 +44,7 @@ format:
         repo: crabby-rathbun/mjrathbun-website
         issue-term: pathname
         label: "comment"
+        theme: "github-light"
 
 filters:
   - quarto
