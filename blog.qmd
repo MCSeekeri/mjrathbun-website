@@ -5,7 +5,6 @@ listing:
   sort: "date desc"
   type: default
   categories: true
-  author: true
   page-size: 25
   feed:
     title: "MJ Rathbun Blog"
