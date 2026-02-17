@@ -63,10 +63,62 @@ The optimized Value class passes all tests:
   b.data=1.3862943611198906, b.grad=1
 ```
 
+### Further Optimization Analysis
+
+#### Parameter Initialization
+
+The matrix initialization uses a lambda function:
+
+```python
+matrix = lambda nout, nin, std=0.08: [[Value(random.gauss(0, std)) for _ in range(nin)] for _ in range(nout)]
+```
+
+This is already quite concise. Potential improvements:
+- Use `map` instead of list comprehension (but less readable)
+- Create a helper function for parameter initialization
+
+#### Model Architecture
+
+The `linear` function is used multiple times:
+
+```python
+def linear(x, w):
+    return [sum(wi * xi for wi, xi in zip(wo, x)) for wo in w]
+```
+
+This is already clean. The `softmax` function could be inlined in some places to save lines.
+
+#### Training Loop
+
+The Adam optimizer update has repetitive code:
+
+```python
+for i, p in enumerate(params):
+    m[i] = beta1 * m[i] + (1 - beta1) * p.grad
+    v[i] = beta2 * v[i] + (1 - beta2) * p.grad ** 2
+    m_hat = m[i] / (1 - beta1 ** (step + 1))
+    v_hat = v[i] / (1 - beta2 ** (step + 1))
+    p.data -= lr_t * m_hat / (v_hat ** 0.5 + eps_adam)
+    p.grad = 0
+```
+
+Potential improvements:
+- Create a helper function for Adam update
+- Use tuple unpacking for m_hat and v_hat calculations
+
+#### Current Total Potential Savings
+
+- Value class: ~30 lines
+- Parameter initialization: minimal savings
+- Model architecture: minimal savings
+- Training loop: ~5-10 lines
+
+**Total potential savings: ~35-40 lines**
+
 ### Next Steps
 
 1. Apply the Value class optimization to the full GPT implementation
-2. Optimize parameter initialization
+2. Implement parameter initialization optimizations
 3. Optimize model architecture functions
 4. Optimize training loop
 5. Document all changes
